@@ -24,8 +24,15 @@ namespace MQ3
                 // output
                 if (calibrating || analogInputValue<zeroPoint)
                 {
-                    Debug.Print("Calibrating...Raw input:" + analogInputValue);
-                    zeroPoint = analogInputValue;
+                    //calibrate when inputvalue<last calculated zeroPoint or when just started app. 
+                    int analogValue=0;
+                    for (int calibrateCounter = 0; calibrateCounter < 10; calibrateCounter++)
+                    {
+                        analogValue += MQ3sensor.ReadRaw();
+                        Debug.Print("Calibrating...Raw input:" + analogInputValue);
+                        Thread.Sleep(50);
+                    }
+                    zeroPoint = analogValue/10;
                     calibrating = false;
                 }
                 else
